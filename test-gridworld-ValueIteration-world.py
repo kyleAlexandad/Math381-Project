@@ -10,4 +10,4 @@ solver = ValueIteration(problem.reward_function, problem.transition_model, gamma
 solver.train()
 
 problem.visualize_value_policy(policy=solver.policy, values=solver.values)
-problem.random_start_policy(policy=solver.policy, start_pos=(4, 17), n=1000)
+problem.random_start_policy(policy=solver.policy, start_pos=(40, 79), n=1000)
