@@ -4,7 +4,7 @@ import random
 
 def create_circle_in_rectangular_csv(input_filepath, output_filepath, radius, fill_value,
                                      center_row=None, center_col=None,
-                                     do_not_replace_value=None,
+                                     do_not_replace_values=None,
                                      random_center_target_value="0"):
     """
     Reads a rectangular CSV. If center_row/col are not provided, it randomly selects
@@ -76,7 +76,15 @@ def create_circle_in_rectangular_csv(input_filepath, output_filepath, radius, fi
 
 
     fill_value_str = str(fill_value)
-    do_not_replace_value_str = str(do_not_replace_value) if do_not_replace_value is not None else None
+
+    do_not_replace_values_str_list = []
+    if do_not_replace_values is not None:
+        if isinstance(do_not_replace_values, list):
+            do_not_replace_values_str_list = [str(val) for val in do_not_replace_values]
+        else: # Assume it's a single value
+            do_not_replace_values_str_list = [str(do_not_replace_values)]
+    if do_not_replace_values_str_list: # Check if the list is not empty
+        print(f"Values that will not be replaced: {do_not_replace_values_str_list}")
 
     modified_data = [list(row_content) for row_content in data]
 
@@ -84,8 +92,8 @@ def create_circle_in_rectangular_csv(input_filepath, output_filepath, radius, fi
         for c_idx in range(num_cols):
             distance = abs(r_idx - center_row) + abs(c_idx - center_col)
             if distance <= radius:
-                if do_not_replace_value_str is not None and modified_data[r_idx][c_idx] == do_not_replace_value_str:
-                    continue
+                if do_not_replace_values and modified_data[r_idx][c_idx] in do_not_replace_values:
+                        continue
                 modified_data[r_idx][c_idx] = fill_value_str
     try:
         with open(output_filepath, mode='w', newline='', encoding='utf-8') as outfile:
@@ -97,21 +105,21 @@ def create_circle_in_rectangular_csv(input_filepath, output_filepath, radius, fi
         print(f"Error writing CSV: {e}")
 
 if __name__ == "__main__":
-    input_file = "data/sunset_basic.csv"
-    output_file = "data/defender_sunset.csv"
+    input_file = "data/sunset_heatmap.csv"
+    output_file = "data/defender_sunset_heatmap.csv"
 
     # --- Example 1: Randomly chosen center (looking for "0") ---
     print(f"\n--- Running Example 1 (Random Center) ---")
     circle_radius_random = 20
     value_to_fill_random = 4
-    value_to_preserve = "3"
+    value_to_preserve = ["3", "1"] 
 
     center_col, center_row = create_circle_in_rectangular_csv(
         input_filepath=input_file,
         output_filepath=output_file,
         radius=circle_radius_random,
         fill_value=value_to_fill_random,
-        do_not_replace_value=value_to_preserve,
+        do_not_replace_values=value_to_preserve,
         random_center_target_value="0" 
     )
 
@@ -122,5 +130,5 @@ if __name__ == "__main__":
         center_col=center_col,
         radius=10,
         fill_value=2,
-        do_not_replace_value=value_to_preserve
+        do_not_replace_values=value_to_preserve
     )
