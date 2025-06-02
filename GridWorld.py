@@ -41,7 +41,7 @@ class GridWorld:
             for c in range(self.num_cols):
                 s = self.get_state_from_pos((r, c))
                 neighbor_s = np.zeros(self.num_actions)
-                if self.map[r, c] == 0:
+                if self.map[r, c] == 0 or self.map[r, c] == 4:
                     for a in range(self.num_actions):
                         new_r, new_c = r, c
                         if a == 0:
@@ -165,6 +165,10 @@ class GridWorld:
                     rect = patches.Rectangle((x, y), unit, unit, edgecolor='none', facecolor='green',
                                              alpha=0.6)
                     ax.add_patch(rect)
+                elif self.map[i, j] == 4:
+                    rect = patches.Rectangle((x, y), unit, unit, edgecolor='none', facecolor='orange',
+                                             alpha=0.6)
+                    ax.add_patch(rect)
 
         plt.tight_layout()
         plt.show()
@@ -205,12 +209,16 @@ class GridWorld:
                     rect = patches.Rectangle((x, y), unit, unit, edgecolor='none', facecolor='green',
                                              alpha=0.6)
                     ax.add_patch(rect)
+                elif self.map[i, j] == 4:
+                    rect = patches.Rectangle((x, y), unit, unit, edgecolor='none', facecolor='orange',
+                                             alpha=0.6)
+                    ax.add_patch(rect)
                 s = self.get_state_from_pos((i, j))
-                if self.map[i, j] == 0:
+                if self.map[i, j] == 0 or self.map[i, j] == 4:
                     a = policy[s]
                     symbol = ['^', '>', 'v', '<']
                     ax.plot([x + 0.5 * unit], [y + 0.5 * unit], marker=symbol[a],
-                            linestyle='none', markersize=max(fig_size)*unit, color='#1f77b4')
+                            linestyle='none', markersize=max(fig_size)*unit*0.5, color='#1f77b4')
 
         plt.tight_layout()
         plt.show()
@@ -253,8 +261,12 @@ class GridWorld:
                     rect = patches.Rectangle((x, y), unit, unit, edgecolor='none', facecolor='green',
                                              alpha=0.6)
                     ax.add_patch(rect)
+                elif self.map[i, j] == 4:
+                    rect = patches.Rectangle((x, y), unit, unit, edgecolor='none', facecolor='orange',
+                                             alpha=0.6)
+                    ax.add_patch(rect)
                 if self.map[i, j] != 3:
-                    ax.text(x + 0.5 * unit, y + 0.5 * unit, f'{values[s]:.4f}',
+                    ax.text(x + 0.5 * unit, y + 0.5 * unit, f'{values[s]:.2f}',
                             horizontalalignment='center', verticalalignment='center',
                             fontsize=max(fig_size)*unit*0.6)
                 if policy is not None:
